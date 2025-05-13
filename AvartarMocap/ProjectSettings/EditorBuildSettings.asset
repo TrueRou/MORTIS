@@ -5,7 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Avatardemo0.unity
     guid: c7493c97deba8344b8039df337530a66
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  m_configObjects:
+    Unity.XR.PXR.Settings: {fileID: 11400000, guid: eb10b69e5b4d00a42954e92bfb03d150, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: d38e01e0a0af07947bf328acd6576085, type: 2}
