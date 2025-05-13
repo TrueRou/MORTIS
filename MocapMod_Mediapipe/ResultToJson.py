@@ -2,46 +2,42 @@ import orjson
 
 
 class Handlandmark:
-    def __init__(self,handedness):
-        self.result_type="hand"
-        self.handedness=handedness
-        self.landmarks=list()
+    def __init__(self, handedness):
+        self.result_type = "hand"
+        self.handedness = handedness
+        self.landmarks = list()
 
     def add_world_landmarks(self, world_landmarks):
         self.landmarks.clear()
         for lm in world_landmarks:
-            #保留5位小数
+            # 保留5位小数
             self.landmarks.append({"x": round(-lm.x, 5), "y": round(lm.y, 5), "z": round(-lm.z, 5)})
 
     def to_json(self):
 
-        return orjson.dumps({
-            "result_type":self.result_type,
-            "handedness": self.handedness,
-            "hand_world_landmarks": self.landmarks
-        })
+        return orjson.dumps(
+            {"result_type": self.result_type, "handedness": 0 if self.handedness == "Left" else 1, "hand_world_landmarks": self.landmarks}
+        )
+
 
 class Faceblendshape:
     def __init__(self):
-        self.result_type="face_blendshape"
-        self.face_blendshape=list()
+        self.result_type = "face_blendshape"
+        self.face_blendshape = list()
 
     def add_face_blendshape(self, face_blendshape):
         self.face_blendshape.clear()
         for bs in face_blendshape:
-            self.face_blendshape.append({"name":bs.category_name,"score":bs.score})
+            self.face_blendshape.append({"name": bs.category_name, "score": bs.score})
 
     def to_json(self):
-        return orjson.dumps({
+        return orjson.dumps({"result_type": self.result_type, "face_blendshape": self.face_blendshape})
 
-            "result_type":self.result_type,
-            "face_blendshape": self.face_blendshape
-        })
 
 class Facelandmark:
     def __init__(self):
-        self.result_type="face_landmarks"
-        self.face_landmarks=list()
+        self.result_type = "face_landmarks"
+        self.face_landmarks = list()
 
     def add_face_landmarks(self, face_landmarks):
         self.face_landmarks.clear()
@@ -49,15 +45,13 @@ class Facelandmark:
             self.face_landmarks.append({"x": round(-lm.x, 5), "y": round(lm.y, 5), "z": round(-lm.z, 5)})
 
     def to_json(self):
-        return orjson.dumps({
+        return orjson.dumps({"result_type": self.result_type, "face_landmarks": self.face_landmarks})
 
-            "result_type":self.result_type,
-            "face_landmarks": self.face_landmarks
-        })
+
 class Poselandmark:
     def __init__(self):
-        self.result_type="pose"
-        self.landmarks=list()
+        self.result_type = "pose"
+        self.landmarks = list()
 
     def add_world_landmarks(self, world_landmarks):
         self.landmarks.clear()
@@ -65,19 +59,4 @@ class Poselandmark:
             self.landmarks.append({"x": round(-lm.x, 5), "y": round(lm.y, 5), "z": round(-lm.z, 5)})
 
     def to_json(self):
-        return orjson.dumps({
-            "result_type":self.result_type,
-            "landmarks": self.landmarks
-        })
-
-
-
-
-
-
-
-
-
-
-
-
+        return orjson.dumps({"result_type": self.result_type, "landmarks": self.landmarks})
