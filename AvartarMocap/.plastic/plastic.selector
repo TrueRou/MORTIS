@@ -1,4 +1,0 @@
-repository "AvartarMocap@cattycatman@cloud"
-  path "/"
-    br "/main"
-    co "/main"
