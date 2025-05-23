@@ -86,7 +86,7 @@ class HandLandmark:
             self.landmarks.append({"x": round(-lm.x, 5), "y": round(lm.y, 5), "z": round(-lm.z, 5)})
 
     def as_dict(self):
-        return {"handedness": 0 if self.handedness == "left" else 1, "hand_world_landmarks": self.landmarks}
+        return {"handedness": 1 if self.handedness == "left" else 0, "hand_world_landmarks": self.landmarks}
 
 
 class FaceBlendshape:

@@ -17,6 +17,7 @@ if __name__ == "__main__":
         ret, frame = cap.read()
         if not ret:
             break
+        time.sleep(0.1)  # 等待0.1秒
         timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
         controller.detect_async_frame(frame, timestamp_ms)
 

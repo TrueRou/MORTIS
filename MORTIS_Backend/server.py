@@ -27,7 +27,7 @@ class UDPServer:
 
     def start(self):
         # 启动UDPServer
-        self.sock.bind(("", 0))  # 绑定一个随机端口
+        self.sock.bind(("0.0.0.0", 0))  # 绑定一个随机端口
         self.running = True
         print(f"UDPServer_New started, sending to {self.host}:{self.port}")
 
