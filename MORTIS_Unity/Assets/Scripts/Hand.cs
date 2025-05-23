@@ -5,6 +5,12 @@ using UnityEngine;
 public class Hand : MonoBehaviour
 {
     [System.Serializable]
+    public class HandsData
+    {
+        public List<HandData> hands;
+    }
+
+    [System.Serializable]
     public class HandData
     {
         public string result_type;
@@ -12,7 +18,7 @@ public class Hand : MonoBehaviour
         public List<Vector3> hand_world_landmarks;
     }
 
-    public HandData handlm;
+    public HandsData handlm;
 
     Animator animator;
 
@@ -266,148 +272,72 @@ public class Hand : MonoBehaviour
             return;
         }
 
-        // Right hand
-        if (handlm.handedness == 0)
+        foreach (var handData in handlm.hands)
         {
-            // Calculate forward vector
-            Vector3 forward_R = TriangleNormal(handlm.hand_world_landmarks[0], handlm.hand_world_landmarks[5], handlm.hand_world_landmarks[17]);
+            // Right hand
+            if (handData.handedness == 0)
+            {
+                // Calculate forward vector
+                Vector3 forward_R = TriangleNormal(handData.hand_world_landmarks[0], handData.hand_world_landmarks[5], handData.hand_world_landmarks[17]);
 
-            // Wrist rotation
-            RightWrist.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[5] - handlm.hand_world_landmarks[0], forward_R) * Quaternion.Inverse(align_RightWrist);
+                // Wrist rotation
+                RightWrist.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[5] - handData.hand_world_landmarks[0], forward_R) * Quaternion.Inverse(align_RightWrist);
 
-            // // Fingers rotation (Index, Middle, Ring, Pinky, Thumb)
-            IndexFinger1_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[6] - handlm.hand_world_landmarks[5], forward_R) * Quaternion.Inverse(align_IndexFinger1_R);
-            IndexFinger2_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[7] - handlm.hand_world_landmarks[6], forward_R) * Quaternion.Inverse(align_IndexFinger2_R);
-            IndexFinger3_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[8] - handlm.hand_world_landmarks[7], forward_R) * Quaternion.Inverse(align_IndexFinger3_R);
+                // // Fingers rotation (Index, Middle, Ring, Pinky, Thumb)
+                IndexFinger1_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[6] - handData.hand_world_landmarks[5], forward_R) * Quaternion.Inverse(align_IndexFinger1_R);
+                IndexFinger2_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[7] - handData.hand_world_landmarks[6], forward_R) * Quaternion.Inverse(align_IndexFinger2_R);
+                IndexFinger3_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[8] - handData.hand_world_landmarks[7], forward_R) * Quaternion.Inverse(align_IndexFinger3_R);
 
-            MiddleFinger1_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[10] - handlm.hand_world_landmarks[9], forward_R) * Quaternion.Inverse(align_MiddleFinger1_R);
-            MiddleFinger2_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[11] - handlm.hand_world_landmarks[10], forward_R) * Quaternion.Inverse(align_MiddleFinger2_R);
-            MiddleFinger3_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[12] - handlm.hand_world_landmarks[11], forward_R) * Quaternion.Inverse(align_MiddleFinger3_R);
+                MiddleFinger1_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[10] - handData.hand_world_landmarks[9], forward_R) * Quaternion.Inverse(align_MiddleFinger1_R);
+                MiddleFinger2_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[11] - handData.hand_world_landmarks[10], forward_R) * Quaternion.Inverse(align_MiddleFinger2_R);
+                MiddleFinger3_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[12] - handData.hand_world_landmarks[11], forward_R) * Quaternion.Inverse(align_MiddleFinger3_R);
 
-            RingFinger1_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[14] - handlm.hand_world_landmarks[13], forward_R) * Quaternion.Inverse(align_RingFinger1_R);
-            RingFinger2_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[15] - handlm.hand_world_landmarks[14], forward_R) * Quaternion.Inverse(align_RingFinger2_R);
-            RingFinger3_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[16] - handlm.hand_world_landmarks[15], forward_R) * Quaternion.Inverse(align_RingFinger3_R);
+                RingFinger1_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[14] - handData.hand_world_landmarks[13], forward_R) * Quaternion.Inverse(align_RingFinger1_R);
+                RingFinger2_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[15] - handData.hand_world_landmarks[14], forward_R) * Quaternion.Inverse(align_RingFinger2_R);
+                RingFinger3_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[16] - handData.hand_world_landmarks[15], forward_R) * Quaternion.Inverse(align_RingFinger3_R);
 
-            LittleFinger1_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[18] - handlm.hand_world_landmarks[17], forward_R) * Quaternion.Inverse(align_LittleFinger1_R);
-            LittleFinger2_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[19] - handlm.hand_world_landmarks[18], forward_R) * Quaternion.Inverse(align_LittleFinger2_R);
-            LittleFinger3_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[20] - handlm.hand_world_landmarks[19], forward_R) * Quaternion.Inverse(align_LittleFinger3_R);
+                LittleFinger1_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[18] - handData.hand_world_landmarks[17], forward_R) * Quaternion.Inverse(align_LittleFinger1_R);
+                LittleFinger2_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[19] - handData.hand_world_landmarks[18], forward_R) * Quaternion.Inverse(align_LittleFinger2_R);
+                LittleFinger3_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[20] - handData.hand_world_landmarks[19], forward_R) * Quaternion.Inverse(align_LittleFinger3_R);
 
-            Thumb0_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[2] - handlm.hand_world_landmarks[1], forward_R) * Quaternion.Inverse(align_Thumb0_R);
-            Thumb1_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[3] - handlm.hand_world_landmarks[2], forward_R) * Quaternion.Inverse(align_Thumb1_R);
-            Thumb2_R.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[4] - handlm.hand_world_landmarks[3], forward_R) * Quaternion.Inverse(align_Thumb2_R);
-        }
-        // Left hand
-        else if (handlm.handedness == 1)
-        {
-            // Calculate forward vector
-            Vector3 forward_L = TriangleNormal(handlm.hand_world_landmarks[0], handlm.hand_world_landmarks[5], handlm.hand_world_landmarks[17]);
+                Thumb0_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[2] - handData.hand_world_landmarks[1], forward_R) * Quaternion.Inverse(align_Thumb0_R);
+                Thumb1_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[3] - handData.hand_world_landmarks[2], forward_R) * Quaternion.Inverse(align_Thumb1_R);
+                Thumb2_R.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[4] - handData.hand_world_landmarks[3], forward_R) * Quaternion.Inverse(align_Thumb2_R);
+            }
+            // Left hand
+            else if (handData.handedness == 1)
+            {
+                // Calculate forward vector
+                Vector3 forward_L = TriangleNormal(handData.hand_world_landmarks[0], handData.hand_world_landmarks[5], handData.hand_world_landmarks[17]);
 
-            // Wrist rotation
-            LeftWrist.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[5] - handlm.hand_world_landmarks[0], forward_L) * Quaternion.Inverse(align_LeftWrist);
+                // Wrist rotation
+                LeftWrist.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[5] - handData.hand_world_landmarks[0], forward_L) * Quaternion.Inverse(align_LeftWrist);
 
-            // // Fingers rotation (Index, Middle, Ring, Pinky, Thumb)
-            IndexFinger1_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[6] - handlm.hand_world_landmarks[5], forward_L) * Quaternion.Inverse(align_IndexFinger1_L);
-            IndexFinger2_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[7] - handlm.hand_world_landmarks[6], forward_L) * Quaternion.Inverse(align_IndexFinger2_L);
-            IndexFinger3_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[8] - handlm.hand_world_landmarks[7], forward_L) * Quaternion.Inverse(align_IndexFinger3_L);
+                // // Fingers rotation (Index, Middle, Ring, Pinky, Thumb)
+                IndexFinger1_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[6] - handData.hand_world_landmarks[5], forward_L) * Quaternion.Inverse(align_IndexFinger1_L);
+                IndexFinger2_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[7] - handData.hand_world_landmarks[6], forward_L) * Quaternion.Inverse(align_IndexFinger2_L);
+                IndexFinger3_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[8] - handData.hand_world_landmarks[7], forward_L) * Quaternion.Inverse(align_IndexFinger3_L);
 
-            MiddleFinger1_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[10] - handlm.hand_world_landmarks[9], forward_L) * Quaternion.Inverse(align_MiddleFinger1_L);
-            MiddleFinger2_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[11] - handlm.hand_world_landmarks[10], forward_L) * Quaternion.Inverse(align_MiddleFinger2_L);
-            MiddleFinger3_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[12] - handlm.hand_world_landmarks[11], forward_L) * Quaternion.Inverse(align_MiddleFinger3_L);
+                MiddleFinger1_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[10] - handData.hand_world_landmarks[9], forward_L) * Quaternion.Inverse(align_MiddleFinger1_L);
+                MiddleFinger2_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[11] - handData.hand_world_landmarks[10], forward_L) * Quaternion.Inverse(align_MiddleFinger2_L);
+                MiddleFinger3_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[12] - handData.hand_world_landmarks[11], forward_L) * Quaternion.Inverse(align_MiddleFinger3_L);
 
-            RingFinger1_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[14] - handlm.hand_world_landmarks[13], forward_L) * Quaternion.Inverse(align_RingFinger1_L);
-            RingFinger2_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[15] - handlm.hand_world_landmarks[14], forward_L) * Quaternion.Inverse(align_RingFinger2_L);
-            RingFinger3_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[16] - handlm.hand_world_landmarks[15], forward_L) * Quaternion.Inverse(align_RingFinger3_L);
+                RingFinger1_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[14] - handData.hand_world_landmarks[13], forward_L) * Quaternion.Inverse(align_RingFinger1_L);
+                RingFinger2_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[15] - handData.hand_world_landmarks[14], forward_L) * Quaternion.Inverse(align_RingFinger2_L);
+                RingFinger3_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[16] - handData.hand_world_landmarks[15], forward_L) * Quaternion.Inverse(align_RingFinger3_L);
 
-            LittleFinger1_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[18] - handlm.hand_world_landmarks[17], forward_L) * Quaternion.Inverse(align_LittleFinger1_L);
-            LittleFinger2_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[19] - handlm.hand_world_landmarks[18], forward_L) * Quaternion.Inverse(align_LittleFinger2_L);
-            LittleFinger3_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[20] - handlm.hand_world_landmarks[19], forward_L) * Quaternion.Inverse(align_LittleFinger3_L);
+                LittleFinger1_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[18] - handData.hand_world_landmarks[17], forward_L) * Quaternion.Inverse(align_LittleFinger1_L);
+                LittleFinger2_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[19] - handData.hand_world_landmarks[18], forward_L) * Quaternion.Inverse(align_LittleFinger2_L);
+                LittleFinger3_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[20] - handData.hand_world_landmarks[19], forward_L) * Quaternion.Inverse(align_LittleFinger3_L);
 
-            Thumb0_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[2] - handlm.hand_world_landmarks[1], forward_L) * Quaternion.Inverse(align_Thumb0_L);
-            Thumb1_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[3] - handlm.hand_world_landmarks[2], forward_L) * Quaternion.Inverse(align_Thumb1_L);
-            Thumb2_L.rotation = Quaternion.LookRotation(handlm.hand_world_landmarks[4] - handlm.hand_world_landmarks[3], forward_L) * Quaternion.Inverse(align_Thumb2_L);
-        }
-        else
-        {
-            Debug.Log("Handedness is not properly initialized.");
-        }
-    }
-
-    private void UpdateHand_lerp()
-    {
-        if (handlm == null)
-        {
-            Debug.LogError("handlm or its landmarks are not properly initialized.");
-            return;
-        }
-
-
-        // Right hand
-        if (handlm.handedness == 0)
-        {
-            // Calculate forward vector
-            Vector3 forward_R = TriangleNormal(handlm.hand_world_landmarks[0], handlm.hand_world_landmarks[5], handlm.hand_world_landmarks[17]);
-
-            // Wrist rotation
-            Quaternion targetRotation_R = Quaternion.LookRotation(handlm.hand_world_landmarks[5] - handlm.hand_world_landmarks[0], forward_R) * Quaternion.Inverse(align_RightWrist);
-            RightWrist.rotation = Quaternion.Slerp(RightWrist.rotation, targetRotation_R, interpolationFactor);
-
-            // Fingers rotation (Index, Middle, Ring, Pinky, Thumb)
-            IndexFinger1_R.rotation = Quaternion.Slerp(IndexFinger1_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[6] - handlm.hand_world_landmarks[5], forward_R) * Quaternion.Inverse(align_IndexFinger1_R), interpolationFactor);
-            IndexFinger2_R.rotation = Quaternion.Slerp(IndexFinger2_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[7] - handlm.hand_world_landmarks[6], forward_R) * Quaternion.Inverse(align_IndexFinger2_R), interpolationFactor);
-            IndexFinger3_R.rotation = Quaternion.Slerp(IndexFinger3_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[8] - handlm.hand_world_landmarks[7], forward_R) * Quaternion.Inverse(align_IndexFinger3_R), interpolationFactor);
-
-            MiddleFinger1_R.rotation = Quaternion.Slerp(MiddleFinger1_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[10] - handlm.hand_world_landmarks[9], forward_R) * Quaternion.Inverse(align_MiddleFinger1_R), interpolationFactor);
-            MiddleFinger2_R.rotation = Quaternion.Slerp(MiddleFinger2_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[11] - handlm.hand_world_landmarks[10], forward_R) * Quaternion.Inverse(align_MiddleFinger2_R), interpolationFactor);
-            MiddleFinger3_R.rotation = Quaternion.Slerp(MiddleFinger3_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[12] - handlm.hand_world_landmarks[11], forward_R) * Quaternion.Inverse(align_MiddleFinger3_R), interpolationFactor);
-
-            RingFinger1_R.rotation = Quaternion.Slerp(RingFinger1_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[14] - handlm.hand_world_landmarks[13], forward_R) * Quaternion.Inverse(align_RingFinger1_R), interpolationFactor);
-            RingFinger2_R.rotation = Quaternion.Slerp(RingFinger2_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[15] - handlm.hand_world_landmarks[14], forward_R) * Quaternion.Inverse(align_RingFinger2_R), interpolationFactor);
-            RingFinger3_R.rotation = Quaternion.Slerp(RingFinger3_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[16] - handlm.hand_world_landmarks[15], forward_R) * Quaternion.Inverse(align_RingFinger3_R), interpolationFactor);
-
-            LittleFinger1_R.rotation = Quaternion.Slerp(LittleFinger1_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[18] - handlm.hand_world_landmarks[17], forward_R) * Quaternion.Inverse(align_LittleFinger1_R), interpolationFactor);
-            LittleFinger2_R.rotation = Quaternion.Slerp(LittleFinger2_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[19] - handlm.hand_world_landmarks[18], forward_R) * Quaternion.Inverse(align_LittleFinger2_R), interpolationFactor);
-            LittleFinger3_R.rotation = Quaternion.Slerp(LittleFinger3_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[20] - handlm.hand_world_landmarks[19], forward_R) * Quaternion.Inverse(align_LittleFinger3_R), interpolationFactor);
-
-            Thumb0_R.rotation = Quaternion.Slerp(Thumb0_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[2] - handlm.hand_world_landmarks[1], forward_R) * Quaternion.Inverse(align_Thumb0_R), interpolationFactor);
-            Thumb1_R.rotation = Quaternion.Slerp(Thumb1_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[3] - handlm.hand_world_landmarks[2], forward_R) * Quaternion.Inverse(align_Thumb1_R), interpolationFactor);
-            Thumb2_R.rotation = Quaternion.Slerp(Thumb2_R.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[4] - handlm.hand_world_landmarks[3], forward_R) * Quaternion.Inverse(align_Thumb2_R), interpolationFactor);
-        }
-
-        // Left hand
-        else if (handlm.handedness == 1)
-        {
-            // Calculate forward vector
-            Vector3 forward_L = TriangleNormal(handlm.hand_world_landmarks[0], handlm.hand_world_landmarks[5], handlm.hand_world_landmarks[17]);
-
-            // Wrist rotation
-            Quaternion targetRotation_L = Quaternion.LookRotation(handlm.hand_world_landmarks[5] - handlm.hand_world_landmarks[0], forward_L) * Quaternion.Inverse(align_LeftWrist);
-            LeftWrist.rotation = Quaternion.Slerp(LeftWrist.rotation, targetRotation_L, interpolationFactor);
-
-            // Fingers rotation (Index, Middle, Ring, Pinky, Thumb)
-            IndexFinger1_L.rotation = Quaternion.Slerp(IndexFinger1_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[6] - handlm.hand_world_landmarks[5], forward_L) * Quaternion.Inverse(align_IndexFinger1_L), interpolationFactor);
-            IndexFinger2_L.rotation = Quaternion.Slerp(IndexFinger2_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[7] - handlm.hand_world_landmarks[6], forward_L) * Quaternion.Inverse(align_IndexFinger2_L), interpolationFactor);
-            IndexFinger3_L.rotation = Quaternion.Slerp(IndexFinger3_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[8] - handlm.hand_world_landmarks[7], forward_L) * Quaternion.Inverse(align_IndexFinger3_L), interpolationFactor);
-
-            MiddleFinger1_L.rotation = Quaternion.Slerp(MiddleFinger1_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[10] - handlm.hand_world_landmarks[9], forward_L) * Quaternion.Inverse(align_MiddleFinger1_L), interpolationFactor);
-            MiddleFinger2_L.rotation = Quaternion.Slerp(MiddleFinger2_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[11] - handlm.hand_world_landmarks[10], forward_L) * Quaternion.Inverse(align_MiddleFinger2_L), interpolationFactor);
-            MiddleFinger3_L.rotation = Quaternion.Slerp(MiddleFinger3_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[12] - handlm.hand_world_landmarks[11], forward_L) * Quaternion.Inverse(align_MiddleFinger3_L), interpolationFactor);
-
-            RingFinger1_L.rotation = Quaternion.Slerp(RingFinger1_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[14] - handlm.hand_world_landmarks[13], forward_L) * Quaternion.Inverse(align_RingFinger1_L), interpolationFactor);
-            RingFinger2_L.rotation = Quaternion.Slerp(RingFinger2_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[15] - handlm.hand_world_landmarks[14], forward_L) * Quaternion.Inverse(align_RingFinger2_L), interpolationFactor);
-            RingFinger3_L.rotation = Quaternion.Slerp(RingFinger3_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[16] - handlm.hand_world_landmarks[15], forward_L) * Quaternion.Inverse(align_RingFinger3_L), interpolationFactor);
-
-            LittleFinger1_L.rotation = Quaternion.Slerp(LittleFinger1_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[18] - handlm.hand_world_landmarks[17], forward_L) * Quaternion.Inverse(align_LittleFinger1_L), interpolationFactor);
-            LittleFinger2_L.rotation = Quaternion.Slerp(LittleFinger2_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[19] - handlm.hand_world_landmarks[18], forward_L) * Quaternion.Inverse(align_LittleFinger2_L), interpolationFactor);
-            LittleFinger3_L.rotation = Quaternion.Slerp(LittleFinger3_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[20] - handlm.hand_world_landmarks[19], forward_L) * Quaternion.Inverse(align_LittleFinger3_L), interpolationFactor);
-
-            Thumb0_L.rotation = Quaternion.Slerp(Thumb0_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[2] - handlm.hand_world_landmarks[1], forward_L) * Quaternion.Inverse(align_Thumb0_L), interpolationFactor);
-            Thumb1_L.rotation = Quaternion.Slerp(Thumb1_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[3] - handlm.hand_world_landmarks[2], forward_L) * Quaternion.Inverse(align_Thumb1_L), interpolationFactor);
-            Thumb2_L.rotation = Quaternion.Slerp(Thumb2_L.rotation, Quaternion.LookRotation(handlm.hand_world_landmarks[4] - handlm.hand_world_landmarks[3], forward_L) * Quaternion.Inverse(align_Thumb2_L), interpolationFactor);
-        }
-        // Hand data error
-        else
-        {
-            Debug.Log("Handedness is not properly initialized.");
+                Thumb0_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[2] - handData.hand_world_landmarks[1], forward_L) * Quaternion.Inverse(align_Thumb0_L);
+                Thumb1_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[3] - handData.hand_world_landmarks[2], forward_L) * Quaternion.Inverse(align_Thumb1_L);
+                Thumb2_L.rotation = Quaternion.LookRotation(handData.hand_world_landmarks[4] - handData.hand_world_landmarks[3], forward_L) * Quaternion.Inverse(align_Thumb2_L);
+            }
+            else
+            {
+                Debug.Log("Handedness is not properly initialized.");
+            }
         }
     }
 
@@ -420,7 +350,6 @@ public class Hand : MonoBehaviour
 
     void Update()
     {
-        if (usinglerp) UpdateHand_lerp();
-        else UpdateHand();
+        UpdateHand();
     }
 }

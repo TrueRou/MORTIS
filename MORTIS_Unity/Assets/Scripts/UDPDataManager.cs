@@ -44,13 +44,12 @@ public class UDPDataManager : MonoBehaviour
                         pose.poselm = JsonUtility.FromJson<Pose.PoseData>(jsonData);
                         break;
                     case "face_landmarks":
-                        face.facelm = JsonUtility.FromJson<Face.FaceData_landmark>(jsonData);
+                        face.facelm = JsonUtility.FromJson<Face.FaceData>(jsonData);
                         break;
                     case "face_blendshape":
-                        face.facebs = JsonUtility.FromJson<Face.FaceData_blendshape>(jsonData);
                         break;
-                    case "hand":
-                        hand.handlm = JsonUtility.FromJson<Hand.HandData>(jsonData);
+                    case "hands":
+                        hand.handlm = JsonUtility.FromJson<Hand.HandsData>(jsonData);
                         break;
                     default:
                         Debug.Log("invalid result");

@@ -1,10 +1,9 @@
-import cv2
-import numpy as np
-import mediapipe as mp
-from MORTIS_Backend.controller import DataController
-from MORTIS_Backend.utils import draw_facelandmarks_on_image, draw_poselandmarks_on_image, draw_handlandmarks_on_image
 import time
 
+import cv2
+
+from controller import DataController
+from utils import draw_facelandmarks_on_image, draw_handlandmarks_on_image, draw_poselandmarks_on_image
 
 if __name__ == "__main__":
     controller = DataController()
@@ -34,7 +33,7 @@ if __name__ == "__main__":
 
         counter += 1
         elapsed_time = time.time() - loop_start_time
-        print(f"第 {counter} 次循环执行检测时间: {elapsed_time:.5f} 秒")
+        # print(f"第 {counter} 次循环执行检测时间: {elapsed_time:.5f} 秒")
 
         if cv2.waitKey(1) & 0xFF == 27:
             cap.release()

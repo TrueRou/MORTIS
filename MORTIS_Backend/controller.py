@@ -1,7 +1,8 @@
 import mediapipe as mp
-import cv2
+import orjson
+
 import config
-from MORTIS_Backend.server import UDPServer
+from server import UDPServer
 
 
 class FaceDetector:
@@ -25,22 +26,6 @@ class FaceDetector:
 
     def result_callback(self, result, output_image: mp.Image, timestamp_ms: int):
         self.controller.get_result_face(result, timestamp_ms)
-
-    def detect_live_face(self):
-        cap = cv2.VideoCapture(0)
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            # 将帧转换为 MediaPipe 图像对象
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-            timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
-
-            # livestream模式下的detect方法(detect_async)：异步执行面部标志点检测
-            self.landmarker.detect_async(mp_image, timestamp_ms)
-
-        cap.release()
 
 
 class HandDetector:
@@ -67,22 +52,6 @@ class HandDetector:
     def result_callback(self, result, output_image: mp.Image, timestamp_ms: int):
         self.controller.get_result_hands(result, timestamp_ms)
 
-    def detect_live_hands(self):
-        cap = cv2.VideoCapture(0)
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            # 将帧转换为 MediaPipe 图像对象
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-            timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
-
-            # livestream模式下的detect方法(detect_async)：异步执行面部标志点检测
-            self.landmarker.detect_async(mp_image, timestamp_ms)
-
-        cap.release()
-
 
 class BodyDetector:
     def __init__(self, controller, model_path: str):
@@ -104,26 +73,9 @@ class BodyDetector:
     def result_callback(self, result, output_image: mp.Image, timestamp_ms: int):
         self.controller.get_result_pose(result, timestamp_ms)
 
-    def detect_live_pose(self):
-        cap = cv2.VideoCapture(0)
-        while cap.isOpened():
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            # 将帧转换为 MediaPipe 图像对象
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-            timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
-
-            # livestream模式下的detect方法(detect_async)：异步执行面部标志点检测
-            self.landmarker.detect_async(mp_image, timestamp_ms)
-
-        cap.release()
-
 
 class HandLandmark:
     def __init__(self, handedness):
-        self.result_type = "hand"
         self.handedness = handedness
         self.landmarks = list()
 
@@ -133,10 +85,8 @@ class HandLandmark:
             # 保留5位小数
             self.landmarks.append({"x": round(-lm.x, 5), "y": round(lm.y, 5), "z": round(-lm.z, 5)})
 
-    def to_json(self):
-        return orjson.dumps(
-            {"result_type": self.result_type, "handedness": 0 if self.handedness == "Left" else 1, "hand_world_landmarks": self.landmarks}
-        )
+    def as_dict(self):
+        return {"handedness": 0 if self.handedness == "left" else 1, "hand_world_landmarks": self.landmarks}
 
 
 class FaceBlendshape:
@@ -193,7 +143,6 @@ class DataController:
         self.face_blendshapes_for_visualization = None
         # 初始化UDP服务器
         self.udp_server = UDPServer(config.IP, config.PORT)
-        self.udp_server.kill_port_process()
 
     def start(self):
         self.udp_server.start()
@@ -205,17 +154,18 @@ class DataController:
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
         self.face_detector.landmarker.detect_async(mp_image, timestamp_ms)
         self.pose_detector.landmarker.detect_async(mp_image, timestamp_ms)
+        self.hand_detector.landmarker.detect_async(mp_image, timestamp_ms)
 
     def get_result_hands(self, result, timestamp_ms):
         self.hand_results = result
 
-        for i in range(len(result.handedness)):
-            self.left_hand = HandLandmark("left")
-            self.right_hand = HandLandmark("right")
-            self.left_hand.add_world_landmarks(result.hand_world_landmarks[i])
-            self.right_hand.add_world_landmarks(result.hand_world_landmarks[i])
-            self.udp_server.send_data(self.left_hand.to_json())
-            self.udp_server.send_data(self.right_hand.to_json())
+        results = []
+
+        for idx, category in enumerate(result.handedness):
+            current_hand = HandLandmark(category[0].display_name.lower())
+            current_hand.add_world_landmarks(result.hand_world_landmarks[idx])
+            results.append(current_hand.as_dict())
+        self.udp_server.send_data(orjson.dumps({"hands": results, "result_type": "hands"}))
 
     def get_result_face(self, result, timestamp_ms):
         self.face_results = result
